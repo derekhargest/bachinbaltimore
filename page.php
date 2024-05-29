@@ -21,7 +21,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<?php avada_singular_featured_image(); ?>
 
 		<div class="post-content">
-
 			<?php fusion_link_pages(); ?>
 		</div>
 		<?php if ( ! post_password_required( $post->ID ) ) : ?>

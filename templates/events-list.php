@@ -8,14 +8,15 @@ $all_upcoming_events = EEM_Event::instance()->get_all(
 	)
 );
 
-// Filter out special events from the list
 $upcoming_events = array_filter(
 	$all_upcoming_events,
 	function( $event ) {
 		$is_special_event = get_post_meta( $event->ID(), '_ee_is_special_event', true );
-		return $is_special_event !== 'yes'; // Keep the event if it's not marked as special
+		return $is_special_event !== 'yes';
 	}
 );
+
+$extra_boxes_data = get_post_meta( get_the_ID(), '_extra_boxes_data', true );
 
 if ( ! empty( $upcoming_events ) ) : ?>
 <div class="events-list">
@@ -24,7 +25,9 @@ if ( ! empty( $upcoming_events ) ) : ?>
 	</div>
 	<div class="events-list__list">
 		<?php
+		$count = 0;
 		foreach ( $upcoming_events as $event ) :
+			$count++;
 			$event_post_id = $event->ID();
 			$thumbnail_url = get_the_post_thumbnail_url( $event_post_id, 'full' );
 			if ( empty( $thumbnail_url ) ) {
@@ -33,13 +36,15 @@ if ( ! empty( $upcoming_events ) ) : ?>
 			$datetimes        = $event->datetimes_ordered();
 			$first_datetime   = reset( $datetimes );
 			$event_start_date = $first_datetime instanceof EE_Datetime ? $first_datetime->start_date( 'F j, Y' ) : '';
+			$event_color      = get_post_meta( $event_post_id, '_event_color_value', true );
 			?>
-		<div class="events-list__item" style="background-color: <?php echo esc_attr( get_post_meta( $event_post_id, '_event_color_value', true ) ); ?>">
+		<div class="events-list__item">
 			<a href="<?php echo esc_url( get_permalink( $event->ID() ) ); ?>">
 				<div class="events-list__image">
 					<img src="<?php echo esc_url( $thumbnail_url ); ?>" alt="Event Image" class="events-list__img">
 				</div>
-				<div class="events-list__info">
+				<div class="events-list__info" <?php if ( $event_color ) : ?>
+					style="background-color: <?php echo esc_attr( $event_color ); ?>;" <?php endif; ?>>
 					<div class="events-list__date">
 						<p><?php echo esc_html( $event_start_date ); ?></p>
 					</div>
@@ -50,8 +55,30 @@ if ( ! empty( $upcoming_events ) ) : ?>
 			</a>
 		</div>
 		<?php endforeach; ?>
+
+		<?php
+		$additional_boxes = 4 - $count;
+		for ( $i = 1; $i <= $additional_boxes; $i++ ) :
+			$box_title = $extra_boxes_data['title'][ $i ] ?? 'More Info';
+			$box_color = $extra_boxes_data['color'][ $i ] ?? '#dedede';
+			$box_link  = $extra_boxes_data['link'][ $i ] ?? '#';
+			?>
+		<div class="events-list__item events-list__item--extra-box"
+			style="background-color: <?php echo esc_attr( $box_color ); ?>;">
+			<a href="<?php echo esc_url( $box_link ); ?>">
+				<div class="events-list__info">
+					<div class="events-list__title">
+						<h3><?php echo esc_html( $box_title ); ?></h3>
+					</div>
+				</div>
+			</a>
+		</div>
+		<?php endfor; ?>
+
 	</div>
-<?php else : ?>
+	<?php if ( $count == 0 ) : ?>
 	<p>No recent events found.</p>
-<?php endif; ?>
+	<?php endif; ?>
 </div>
+
+<?php endif; ?>
