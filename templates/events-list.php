@@ -10,9 +10,9 @@ $all_upcoming_events = EEM_Event::instance()->get_all(
 
 $upcoming_events = array_filter(
 	$all_upcoming_events,
-	function( $event ) {
+	function ( $event ) {
 		$is_special_event = get_post_meta( $event->ID(), '_ee_is_special_event', true );
-		return $is_special_event !== 'yes';
+		return 'yes' !== $is_special_event;
 	}
 );
 
@@ -27,7 +27,7 @@ if ( ! empty( $upcoming_events ) ) : ?>
 		<?php
 		$count = 0;
 		foreach ( $upcoming_events as $event ) :
-			$count++;
+			++$count;
 			$event_post_id = $event->ID();
 			$thumbnail_url = get_the_post_thumbnail_url( $event_post_id, 'full' );
 			if ( empty( $thumbnail_url ) ) {

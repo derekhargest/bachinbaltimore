@@ -30,7 +30,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	 */
 	echo apply_filters( 'avada_space_head', Avada()->settings->get( 'space_head' ) ); // phpcs:ignore WordPress.Security.EscapeOutput
 	?>
-	<link rel="stylesheet" href="<?php echo esc_url( get_template_directory_uri() . '/assets/css/events.css' ); ?>">
+	<link rel="stylesheet" href="<?php echo esc_url( get_template_directory_uri() . '/assets/css/' ); ?>">
 </head>
 
 <?php

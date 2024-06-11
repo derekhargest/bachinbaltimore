@@ -23,16 +23,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 			echo fusion_render_rich_snippets_for_pages(); // phpcs:ignore WordPress.Security.EscapeOutput 
 		?>
 		<div class="post-content events-template">
-			<?php get_template_part( 'templates/events', 'hero' ); ?>
 			<div class="events-intro">
 				<div class="events-intro__text">
 					<?php the_content(); ?>
 				</div>
 			</div>
-			<?php get_template_part( 'templates/events', 'featured' ); ?>
-			<?php get_template_part( 'templates/events', 'note' ); ?>
-			<?php get_template_part( 'templates/events', 'list' ); ?>
-			<?php get_template_part( 'templates/events', 'special' ); ?>
+			<?php
+				get_template_part( 'templates/events', 'featured' );
+				get_template_part( 'templates/events', 'note' );
+				get_template_part( 'templates/events', 'list' );
+				get_template_part( 'templates/events', 'special' );
+			?>
 		</div>
 		<?php fusion_link_pages(); ?>
 	</div>
